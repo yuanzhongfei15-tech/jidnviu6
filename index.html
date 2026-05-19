@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI工具导航 - 高效办公，智能创作</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(102, 126, 234, 0.25);
+        }
+        
+        .dark .card-hover:hover {
+            box-shadow: 0 25px 50px -12px rgba(102, 126, 234, 0.15);
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .category-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+        
+        .dark .hero-gradient {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        }
+        
+        input:focus, button:focus {
+            outline: none;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .dark ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 transition-colors duration-300">
+    <div class="dark:hidden bg-gradient-to-br from-gray-50 via-white to-gray-100 min-h-screen">
+        <div id="light-theme-content"></div>
+    </div>
+    <div class="hidden dark:block bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 min-h-screen">
+        <div id="dark-theme-content"></div>
+    </div>
+
+    <div id="app" class="min-h-screen">
+        <header class="fixed top-0 left-0 right-0 z-50 glass">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16 lg:h-20">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold gradient-text">AI导航</span>
+                    </div>
+                    
+                    <nav class="hidden md:flex items-center gap-8">
+                        <a href="#featured" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium">精选推荐</a>
+                        <a href="#tools" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium">全部工具</a>
+                        <a href="#hot" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium">热门排行</a>
+                    </nav>
+                    
+                    <div class="flex items-center gap-4">
+                        <button id="theme-toggle" class="p-2 rounded-xl bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors">
+                            <svg id="sun-icon" class="w-5 h-5 text-yellow-600 dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/>
+                            </svg>
+                            <svg id="moon-icon" class="w-5 h-5 text-indigo-400 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                            </svg>
+                        </button>
+                        <button class="btn-gradient text-white px-5 py-2.5 rounded-xl font-medium text-sm">提交工具</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="pt-32 pb-20 hero-gradient">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-4xl mx-auto">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6">
+                        <span class="text-gray-900 dark:text-white">探索最优质的</span>
+                        <span class="gradient-text">AI工具</span>
+                    </h1>
+                    <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto">
+                        精选全球顶尖AI工具，涵盖创作、设计、开发、办公等领域，提升您的工作效率
+                    </p>
+                    
+                    <div class="glass rounded-2xl p-2 shadow-xl max-w-2xl mx-auto">
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <div class="flex-1 flex items-center gap-3 px-4">
+                                <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                <input type="text" id="search-input" placeholder="搜索AI工具..." class="flex-1 bg-transparent py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500">
+                            </div>
+                            <button id="search-btn" class="btn-gradient text-white px-8 py-3 rounded-xl font-medium">
+                                搜索
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div id="featured" class="py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">精选推荐</h2>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2">精心挑选的优质AI工具</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="featured-grid"></div>
+            </div>
+        </div>
+
+        <div id="tools" class="py-16 bg-gray-100/50 dark:bg-slate-800/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">全部工具</h2>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2">按分类浏览所有AI工具</p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap gap-3 mb-8" id="category-buttons"></div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="tools-grid"></div>
+            </div>
+        </div>
+
+        <div id="hot" class="py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">🔥 热门排行</h2>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2">用户最喜爱的AI工具</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="hot-grid"></div>
+            </div>
+        </div>
+
+        <footer class="py-12 border-t border-gray-200 dark:border-slate-700">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div class="md:col-span-2">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                            </div>
+                            <span class="text-xl font-bold gradient-text">AI导航</span>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            精选全球顶尖AI工具，让智能赋能您的创作与工作
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white mb-4">快速链接</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">关于我们</a></li>
+                            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">提交工具</a></li>
+                            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">联系我们</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white mb-4">关注我们</h3>
+                        <div class="flex gap-3">
+                            <a href="#" class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 pt-8 border-t border-gray-200 dark:border-slate-700 text-center text-gray-600 dark:text-gray-400 text-sm">
+                    <p>© 2024 AI导航. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const tools = [
+            { id: 1, name: "ChatGPT", description: "OpenAI推出的最强大的AI对话助手", category: "all-round", icon: "🤖", url: "https://chat.openai.com", featured: true, hot: 1, rating: 4.9 },
+            { id: 2, name: "Midjourney", description: "AI图像生成工具，创造令人惊叹的艺术作品", category: "design", icon: "🎨", url: "https://midjourney.com", featured: true, hot: 2, rating: 4.8 },
+            { id: 3, name: "Claude", description: "Anthropic打造的安全可靠的AI助手", category: "all-round", icon: "💡", url: "https://claude.ai", featured: true, hot: 3, rating: 4.7 },
+            { id: 4, name: "GitHub Copilot", description: "AI编程助手，让编码更高效", category: "coding", icon: "💻", url: "https://github.com/copilot", featured: true, hot: 4, rating: 4.6 },
+            { id: 5, name: "DALL-E 3", description: "OpenAI的最新图像生成模型", category: "design", icon: "🖼️", url: "https://openai.com/dall-e-3", featured: false, hot: 5, rating: 4.7 },
+            { id: 6, name: "Stable Diffusion", description: "开源AI图像生成模型，功能强大", category: "design", icon: "✨", url: "https://stability.ai", featured: false, hot: 6, rating: 4.5 },
+            { id: 7, name: "Notion AI", description: "智能笔记助手，提升写作效率", category: "office", icon: "📝", url: "https://notion.so", featured: true, hot: 7, rating: 4.6 },
+            { id: 8, name: "Runway", description: "专业AI视频编辑和生成平台", category: "video", icon: "🎬", url: "https://runwayml.com", featured: false, hot: 8, rating: 4.5 },
+            { id: 9, name: "Whisper", description: "OpenAI的语音识别系统", category: "audio", icon: "🎙️", url: "https://openai.com/research/whisper", featured: false, hot: 9, rating: 4.4 },
+            { id: 10, name: "Suno", description: "AI音乐生成工具，创作属于你的歌曲", category: "audio", icon: "🎵", url: "https://suno.ai", featured: false, hot: 10, rating: 4.6 },
+            { id: 11, name: "Gemini", description: "Google的多模态AI模型", category: "all-round", icon: "🌟", url: "https://gemini.google.com", featured: true, hot: 11, rating: 4.7 },
+            { id: 12, name: "Cursor", description: "AI驱动的代码编辑器", category: "coding", icon: "⌨️", url: "https://cursor.so", featured: false, hot: 12, rating: 4.5 },
+            { id: 13, name: "Figma AI", description: "AI赋能的设计协作工具", category: "design", icon: "🎯", url: "https://figma.com", featured: false, hot: 13, rating: 4.4 },
+            { id: 14, name: "Pictory", description: "AI视频制作工具，一键生成精彩视频", category: "video", icon: "📹", url: "https://pictory.ai", featured: false, hot: 14, rating: 4.3 },
+            { id: 15, name: "GrammarlyGO", description: "AI写作助手，让你的文字更完美", category: "writing", icon: "✍️", url: "https://grammarly.com", featured: false, hot: 15, rating: 4.5 },
+            { id: 16, name: "Jasper", description: "专业AI内容创作平台", category: "writing", icon: "📚", url: "https://jasper.ai", featured: false, hot: 16, rating: 4.4 },
+            { id: 17, name: "Wolfram Alpha", description: "计算知识引擎，解答各类问题", category: "office", icon: "🔢", url: "https://wolframalpha.com", featured: false, hot: 17, rating: 4.6 },
+            { id: 18, name: "Luma AI", description: "AI 3D模型生成工具", category: "design", icon: "🔷", url: "https://lumalabs.ai", featured: false, hot: 18, rating: 4.3 },
+            { id: 19, name: "ElevenLabs", description: "最自然的AI语音合成工具", category: "audio", icon: "🔊", url: "https://elevenlabs.io", featured: false, hot: 19, rating: 4.7 },
+            { id: 20, name: "Synthesia", description: "AI数字人视频制作平台", category: "video", icon: "👤", url: "https://synthesia.io", featured: false, hot: 20, rating: 4.4 },
+            { id: 21, name: "Perplexity", description: "AI搜索引擎，提供精准答案", category: "all-round", icon: "🔍", url: "https://perplexity.ai", featured: true, hot: 21, rating: 4.6 },
+            { id: 22, name: "Replit", description: "在线AI编程平台", category: "coding", icon: "🚀", url: "https://replit.com", featured: false, hot: 22, rating: 4.4 },
+            { id: 23, name: "Otter.ai", description: "AI会议记录和转录工具", category: "office", icon: "📋", url: "https://otter.ai", featured: false, hot: 23, rating: 4.5 },
+            { id: 24, name: "Canva AI", description: "AI设计工具，人人都能做设计", category: "design", icon: "🎭", url: "https://canva.com", featured: false, hot: 24, rating: 4.4 },
+        ];
+
+        const categories = [
+            { id: "all", name: "全部", icon: "🏠" },
+            { id: "writing", name: "AI创作", icon: "✍️" },
+            { id: "design", name: "视觉设计", icon: "🎨" },
+            { id: "video", name: "影音剪辑", icon: "🎬" },
+            { id: "office", name: "办公效率", icon: "📊" },
+            { id: "coding", name: "代码开发", icon: "💻" },
+            { id: "all-round", name: "全能神器", icon: "🚀" },
+        ];
+
+        let currentCategory = "all";
+        let searchQuery = "";
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        function renderFeaturedTools() {
+            const grid = document.getElementById('featured-grid');
+            const featuredTools = tools.filter(t => t.featured).slice(0, 6);
+            
+            grid.innerHTML = featuredTools.map(tool => `
+                <a href="${tool.url}" target="_blank" class="glass rounded-2xl p-6 card-hover block">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-2xl gradient-bg flex items-center justify-center text-3xl flex-shrink-0">
+                            ${tool.icon}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-1">${tool.name}</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-2">${tool.description}</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between">
+                        <div class="flex items-center gap-1">
+                            <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">${tool.rating}</span>
+                        </div>
+                        <span class="text-xs px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">精选</span>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        function renderCategoryButtons() {
+            const container = document.getElementById('category-buttons');
+            container.innerHTML = categories.map(cat => `
+                <button 
+                    data-category="${cat.id}" 
+                    class="category-btn px-4 py-2.5 rounded-xl font-medium text-sm bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 shadow-sm hover:shadow-md ${currentCategory === cat.id ? 'active' : ''}"
+                >
+                    <span class="mr-2">${cat.icon}</span>${cat.name}
+                </button>
+            `).join('');
+
+            container.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentCategory = btn.dataset.category;
+                    renderCategoryButtons();
+                    renderTools();
+                });
+            });
+        }
+
+        function filterTools() {
+            return tools.filter(tool => {
+                const matchesCategory = currentCategory === 'all' || tool.category === currentCategory;
+                const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                     tool.description.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+        }
+
+        function renderTools() {
+            const grid = document.getElementById('tools-grid');
+            const filteredTools = filterTools();
+            
+            if (filteredTools.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-16">
+                        <div class="text-6xl mb-4">🔍</div>
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">未找到相关工具</h3>
+                        <p class="text-gray-600 dark:text-gray-400">试试其他关键词或分类</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filteredTools.map(tool => `
+                <a href="${tool.url}" target="_blank" class="glass rounded-2xl p-5 card-hover block">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center text-2xl">
+                            ${tool.icon}
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900 dark:text-white">${tool.name}</h3>
+                            <div class="flex items-center gap-1">
+                                <svg class="w-3 h-3 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                <span class="text-xs text-gray-600 dark:text-gray-400">${tool.rating}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-4">${tool.description}</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs px-2.5 py-1 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300">
+                            ${categories.find(c => c.id === tool.category)?.name || tool.category}
+                        </span>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                        </svg>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        function renderHotTools() {
+            const grid = document.getElementById('hot-grid');
+            const hotTools = tools.filter(t => t.hot).sort((a, b) => a.hot - b.hot).slice(0, 10);
+            
+            grid.innerHTML = hotTools.map((tool, index) => `
+                <a href="${tool.url}" target="_blank" class="glass rounded-2xl p-5 card-hover block flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg ${index < 3 ? 'gradient-bg text-white' : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300'}">
+                        ${index + 1}
+                    </div>
+                    <div class="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center text-2xl flex-shrink-0">
+                        ${tool.icon}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-bold text-gray-900 dark:text-white mb-1">${tool.name}</h3>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-1">${tool.description}</p>
+                    </div>
+                    <div class="flex items-center gap-1 flex-shrink-0">
+                        <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        <span class="font-medium text-gray-700 dark:text-gray-300">${tool.rating}</span>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+
+        function performSearch() {
+            searchQuery = searchInput.value.trim();
+            renderTools();
+            document.getElementById('tools').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+
+        searchInput.addEventListener('input', () => {
+            searchQuery = searchInput.value.trim();
+            renderTools();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFeaturedTools();
+            renderCategoryButtons();
+            renderTools();
+            renderHotTools();
+        });
+    </script>
+</body>
+</html>
